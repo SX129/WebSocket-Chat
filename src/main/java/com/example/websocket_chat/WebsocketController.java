@@ -17,6 +17,8 @@ public class WebsocketController {
     @MessageMapping("/message")
     public void handleMessage(Message message){
         System.out.println("Received message from user: " + message.getUser() + ": " + message.getMessage());
+
+        // websocket broadcasts message to /topic/messages to all subscribers
         messagingTemplate.convertAndSend("/topic/messages", message);
         System.out.println("Sent message to /topic/messages: " + message.getUser() + ": " + message.getMessage());
     }
