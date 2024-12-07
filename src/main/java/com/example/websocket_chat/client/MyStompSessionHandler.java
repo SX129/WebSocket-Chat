@@ -20,14 +20,16 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
         System.out.println("Client connected to websocket server");
 
         // automatically subscribe users to /topic/messages
-        session.subscribe("topic/messages", new StompFrameHandler() {
+        session.subscribe("/topic/messages", new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
+                System.out.println("Determining payload type");
                 return Message.class;
             }
 
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
+                System.out.println("Handling frame");
                 try{
                     if(payload instanceof Message){
                         Message message = (Message) payload;
