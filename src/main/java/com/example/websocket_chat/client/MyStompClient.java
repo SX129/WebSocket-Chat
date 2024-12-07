@@ -1,5 +1,6 @@
 package com.example.websocket_chat.client;
 
+import com.example.websocket_chat.Message;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
@@ -38,5 +39,16 @@ public class MyStompClient {
         //URL for websocket uses ws://
         String url = "ws://localhost:8080/ws";
         session = stompClient.connectAsync(url, sessionHandler).get();
+
+        //session.send("/app/message", new Message(username, "Hello World!"));
+    }
+
+    public void sendMessage(Message message){
+        try {
+            session.send("/app/message", message);
+            System.out.println("Sent message: " + message.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
