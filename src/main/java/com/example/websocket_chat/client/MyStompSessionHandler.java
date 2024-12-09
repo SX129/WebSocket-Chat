@@ -18,6 +18,7 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         System.out.println("Client connected to websocket server");
+        session.send("/app/connect", username);
 
         // automatically subscribe users to /topic/messages
         session.subscribe("/topic/messages", new StompFrameHandler() {
