@@ -24,4 +24,18 @@ public class WebsocketController {
         messagingTemplate.convertAndSend("/topic/messages", message);
         System.out.println("Sent message to /topic/messages: " + message.getUser() + ": " + message.getMessage());
     }
+
+    @MessageMapping("/connect")
+    public void connectUser(String username){
+        sessionManager.addUsername(username);
+        sessionManager.broadcastActiveUsernames();
+        System.out.println("User connected: " + username);
+    }
+
+    @MessageMapping("/disconnect")
+    public void disconnectUser(String username){
+        sessionManager.removeUsername(username);
+        sessionManager.broadcastActiveUsernames();
+        System.out.println("User disconnected: " + username);
+    }
 }
