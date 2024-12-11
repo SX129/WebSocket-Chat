@@ -19,7 +19,7 @@ public class MyStompClient {
     private StompSession session;
     private String username;
 
-    public MyStompClient(String username) throws ExecutionException, InterruptedException {
+    public MyStompClient(MessageListener messageListener, String username) throws ExecutionException, InterruptedException {
         this.username = username;
 
         // create a list of transports (protocols) to use
@@ -34,7 +34,7 @@ public class MyStompClient {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         // session handler to handle the new user
-        StompSessionHandler sessionHandler = new MyStompSessionHandler(username);
+        StompSessionHandler sessionHandler = new MyStompSessionHandler(messageListener, username);
 
         //URL for websocket uses ws://
         String url = "ws://localhost:8080/ws";
