@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class MyStompSessionHandler extends StompSessionHandlerAdapter {
     private String username;
@@ -46,6 +47,29 @@ public class MyStompSessionHandler extends StompSessionHandlerAdapter {
         });
 
         System.out.println("Client subscribed to /topic/messages");
+
+        // automatically subscribe users to /topic/users
+        session.subscribe("/topic/users", new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return new ArrayList<String>().getClass();
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                try{
+                    if(payload instanceof ArrayList){
+                        ArrayList<String> activeUsers = (ArrayList<String>) payload;
+                        messageListener.onActiveUsersUpdated(activeUsers);
+                        System.out.println("Received active users: " + activeUsers);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        System.out.println("Client subscribed to /topic/users");
     }
 
     @Override
