@@ -101,6 +101,7 @@ public class ClientGUI extends JFrame {
         });
         inputField.setBackground(Utilities.SECONDARY_COLOR);
         inputField.setForeground(Utilities.TEXT_COLOR);
+        inputField.setBorder(Utilities.addPadding(0, 10, 0, 10));
         inputField.setFont(new Font("Inter", Font.PLAIN, 16));
         inputField.setPreferredSize(new Dimension(inputPanel.getWidth(), 50));
         inputPanel.add(inputField, BorderLayout.CENTER);
