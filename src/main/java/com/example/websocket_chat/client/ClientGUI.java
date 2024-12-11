@@ -8,12 +8,17 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.ExecutionException;
 
 public class ClientGUI extends JFrame {
     private JPanel connectedUsersPanel, messagePanel;
+    private MyStompClient myStompClient;
+    private String username;
 
-    public ClientGUI(String username){
+    public ClientGUI(String username) throws ExecutionException, InterruptedException {
         super("User: " + username);
+        this.username = username;
+        myStompClient = new MyStompClient(username);
 
         setSize(1218, 685);
         setLocationRelativeTo(null);
@@ -27,6 +32,7 @@ public class ClientGUI extends JFrame {
                         JOptionPane.YES_NO_OPTION);
 
                 if (option == JOptionPane.YES_OPTION) {
+                    myStompClient.disconnectUser(username);
                     ClientGUI.this.dispose();
                 }
             }
@@ -88,6 +94,8 @@ public class ClientGUI extends JFrame {
                     messagePanel.add(createChatMessageComponent(new Message("User1", input)));
                     repaint();
                     revalidate();
+
+                    myStompClient.sendMessage(new Message(username, input));
                 }
             }
         });
