@@ -91,10 +91,6 @@ public class ClientGUI extends JFrame {
 
                     inputField.setText("");
 
-                    messagePanel.add(createChatMessageComponent(new Message("User1", input)));
-                    repaint();
-                    revalidate();
-
                     myStompClient.sendMessage(new Message(username, input));
                 }
             }
