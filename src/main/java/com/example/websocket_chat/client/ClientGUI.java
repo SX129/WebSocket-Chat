@@ -8,9 +8,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class ClientGUI extends JFrame {
+public class ClientGUI extends JFrame implements MessageListener{
     private JPanel connectedUsersPanel, messagePanel;
     private MyStompClient myStompClient;
     private String username;
@@ -18,7 +19,7 @@ public class ClientGUI extends JFrame {
     public ClientGUI(String username) throws ExecutionException, InterruptedException {
         super("User: " + username);
         this.username = username;
-        myStompClient = new MyStompClient(username);
+        myStompClient = new MyStompClient(this, username);
 
         setSize(1218, 685);
         setLocationRelativeTo(null);
@@ -125,5 +126,36 @@ public class ClientGUI extends JFrame {
         chatMessage.add(messageLabel);
 
         return chatMessage;
+    }
+
+    @Override
+    public void onMessageReceive(Message message) {
+        messagePanel.add(createChatMessageComponent(message));
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void onActiveUsersUpdated(ArrayList<String> users) {
+        if(connectedUsersPanel.getComponents().length >= 2){
+            connectedUsersPanel.remove(1);
+        }
+
+        JPanel userListPanel = new JPanel();
+        userListPanel.setBackground(Utilities.TRANSPARENT_COLOR);
+        userListPanel.setLayout(new BoxLayout(userListPanel, BoxLayout.Y_AXIS));
+
+        for(String user : users){
+            JLabel username = new JLabel();
+            username.setText(user);
+            username.setFont(new Font("Inter", Font.BOLD, 16));
+            username.setForeground(Utilities.TEXT_COLOR);
+            userListPanel.add(username);
+        }
+
+        connectedUsersPanel.add(userListPanel);
+
+        revalidate();
+        repaint();
     }
 }
