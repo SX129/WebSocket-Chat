@@ -6,10 +6,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +36,13 @@ public class ClientGUI extends JFrame implements MessageListener{
                     myStompClient.disconnectUser(username);
                     ClientGUI.this.dispose();
                 }
+            }
+        });
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateMessageSize();
             }
         });
 
@@ -135,7 +139,8 @@ public class ClientGUI extends JFrame implements MessageListener{
 
         chatMessage.add(usernameLabel);
 
-        JLabel messageLabel = new JLabel(message.getMessage());
+        JLabel messageLabel = new JLabel();
+        messageLabel.setText("<html>" + "<body style='width:" + (0.60 * getWidth()) + "'px>" + message.getMessage() + "</body>" + "</html>");
         messageLabel.setFont(new Font("Inter", Font.PLAIN, 18));
         messageLabel.setForeground(Utilities.TEXT_COLOR);
 
@@ -175,5 +180,20 @@ public class ClientGUI extends JFrame implements MessageListener{
 
         revalidate();
         repaint();
+    }
+
+    private void updateMessageSize(){
+        for(int i = 0; i < messagePanel.getComponents().length; i++){
+            Component component = messagePanel.getComponent(i);
+
+            if(component instanceof JPanel){
+                JPanel chatMessage = (JPanel) component;
+
+                if(chatMessage.getComponent(1) instanceof JLabel){
+                    JLabel messageLabel = (JLabel) chatMessage.getComponent(1);
+                    messageLabel.setText("<html>" + "<body style='width:" + (0.60 * getWidth()) + "'px>" + messageLabel.getText() + "</body>" + "</html>");
+                }
+            }
+        }
     }
 }
