@@ -149,6 +149,8 @@ public class ClientGUI extends JFrame implements MessageListener{
         messagePanel.add(createChatMessageComponent(message));
         revalidate();
         repaint();
+
+        messagePanelScrollPane.getVerticalScrollBar().setValue(Integer.MAX_VALUE);
     }
 
     @Override
